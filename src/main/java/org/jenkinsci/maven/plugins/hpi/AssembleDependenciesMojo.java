@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -114,6 +115,10 @@ public class AssembleDependenciesMojo extends AbstractDependencyGraphTraversingM
         }
     }
 
+    protected void setParsedScopes(List<String> scopes) {
+        this.parsedScopes = scopes;
+    }
+    
     private String getExtension() {
         return useJpiExtension ? "jpi" : "hpi";
     }

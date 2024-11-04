@@ -28,6 +28,8 @@ public abstract class AbstractDependencyGraphTraversingMojo extends AbstractJenk
      * Traverses a tree rooted at the given node.
      */
     protected void visit(DependencyNode g) {
+        String artifactId = g.getArtifact().getArtifactId();
+        System.out.println(artifactId);
         if (accept(g)) {
             for (DependencyNode dn : g.getChildren()) {
                 visit(dn);
