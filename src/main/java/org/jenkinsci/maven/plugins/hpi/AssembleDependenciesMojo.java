@@ -6,13 +6,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
-import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.codehaus.plexus.util.FileUtils;
+import org.eclipse.aether.collection.DependencyCollectionException;
+import org.eclipse.aether.graph.DependencyNode;
 
 /**
  * Used to assemble transitive dependencies of plugins into one location.
@@ -58,7 +60,7 @@ public class AssembleDependenciesMojo extends AbstractDependencyGraphTraversingM
 
     @Override
     protected boolean accept(DependencyNode g) {
-        MavenArtifact a = wrap(g.getArtifact());
+        MavenArtifact a = wrap(RepositoryUtils.toArtifact(g.getArtifact()));
 
         if (!parsedScopes.contains(a.getScope())) {
             return false;
@@ -71,7 +73,7 @@ public class AssembleDependenciesMojo extends AbstractDependencyGraphTraversingM
         try {
             if (!a.isPlugin()) {
                 // only traverse chains of direct plugin dependencies, unless it's from the root
-                return g.getParent() == null;
+                return g.getDependency() == null;
             }
         } catch (IOException e) {
             getLog().warn("Failed to process " + a, e);
@@ -97,7 +99,7 @@ public class AssembleDependenciesMojo extends AbstractDependencyGraphTraversingM
             }
 
             traverseProject();
-        } catch (DependencyGraphBuilderException e) {
+        } catch (DependencyCollectionException e) {
             throw new MojoExecutionException("Failed to list up dependencies", e);
         }
 
@@ -112,6 +114,10 @@ public class AssembleDependenciesMojo extends AbstractDependencyGraphTraversingM
                 throw new MojoExecutionException("Failed to copy dependency: " + a, e);
             }
         }
+    }
+
+    protected void setParsedScopes(List<String> scopes) {
+        this.parsedScopes = scopes;
     }
 
     private String getExtension() {

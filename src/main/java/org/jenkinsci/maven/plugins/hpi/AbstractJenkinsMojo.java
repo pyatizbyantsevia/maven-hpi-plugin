@@ -1,13 +1,12 @@
 package org.jenkinsci.maven.plugins.hpi;
 
-import hudson.util.VersionNumber;
-import io.jenkins.lib.versionnumber.JavaSpecificationVersion;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.execution.MavenSession;
@@ -21,10 +20,13 @@ import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.ProjectBuilder;
 import org.eclipse.aether.RepositorySystem;
 
+import hudson.util.VersionNumber;
+import io.jenkins.lib.versionnumber.JavaSpecificationVersion;
+
 /**
  * Mojos that need to figure out the Jenkins version it's working with.
  *
- * @author Kohsuke Kawaguchi
+ * @author Kohsuke KawaguchifgetArtifactId
  */
 public abstract class AbstractJenkinsMojo extends AbstractMojo {
 
